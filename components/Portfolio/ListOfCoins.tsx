@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Text, FlatList, StyleSheet } from 'react-native';
 import { Card, TouchableRipple } from 'react-native-paper';
 import PortfolioChart from './PortfolioChart';
+import PortfolioValueChart from './PortfolioValueChart';
 
 import { useTransactions } from '../../context/TransactionsContext';
 
@@ -44,7 +45,8 @@ const ListOfCoins: React.FC<{ onCoinPress: (coin: string) => void }> = ({
     <FlatList
       data={portfolioArray}
       keyExtractor={(item) => item.coin}
-      ListHeaderComponent={<PortfolioChart portfolioArray={portfolioArray} />}
+      ListHeaderComponent={<PortfolioValueChart />}
+      contentContainerStyle={{ padding: 16 }}
       renderItem={({ item }) => (
         <TouchableRipple
           onPress={() => onCoinPress(item.coin)}
