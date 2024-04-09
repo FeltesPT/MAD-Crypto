@@ -19,14 +19,14 @@ const PortfolioOverviewScreen: React.FC<{ navigation: any }> = ({
           onPress={() => openAddTransactionModal()}
         />
       ),
-      headerLeft: () => (
-        <MaterialCommunityIcons
-          name='delete'
-          size={24}
-          style={{ marginRight: 10 }}
-          onPress={() => AsyncStorage.clear()}
-        />
-      )
+      // headerLeft: () => (
+      //   <MaterialCommunityIcons
+      //     name='delete'
+      //     size={24}
+      //     style={{ marginRight: 10 }}
+      //     onPress={() => AsyncStorage.clear()}
+      //   />
+      // )
     });
   }, [navigation]);
 
@@ -38,7 +38,7 @@ const PortfolioOverviewScreen: React.FC<{ navigation: any }> = ({
   
   return (
     <SafeAreaView style={styles.view}>
-      <ListOfCoins onCoinPress={(coin) => navigation.navigate('CoinPurchases', { coin })} />
+      <ListOfCoins onGoToChartPress={() => navigation.navigate('Chart')} onCoinPress={(coin) => navigation.navigate('CoinPurchases', { coin })} />
     </SafeAreaView>
   );
 };

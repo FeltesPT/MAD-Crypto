@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button, InputAccessoryView, Keyboard, Alert } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Button,
+  InputAccessoryView,
+  Keyboard,
+  Alert,
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { cryptocurrencies } from '../utils/utils';
 import { useTransactions } from '../context/TransactionsContext';
+import TypePicker from '../components/Transaction/TypePicker';
 
 const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
   navigation,
   route,
 }) => {
   const initialCoin = route.params?.coin;
-  const initialCoinValue = cryptocurrencies.find((cryptocurrency) => cryptocurrency.label === initialCoin)?.value || cryptocurrencies[0].value;
+  const initialCoinValue =
+    cryptocurrencies.find(
+      (cryptocurrency) => cryptocurrency.label === initialCoin,
+    )?.value || cryptocurrencies[0].value;
 
   const [selectedCoin, setSelectedCoin] = useState(initialCoinValue);
   const [quantity, setQuantity] = useState('');
   const [pricePerCoin, setPricePerCoin] = useState('');
+  const [selectedType, setType] = useState('buy');
 
   const { addTransaction } = useTransactions();
 
@@ -22,8 +34,21 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
     const quantityNum = parseFloat(quantity);
     const priceNum = parseFloat(pricePerCoin);
 
-    if (!quantityNum || quantityNum <= 0 || !priceNum || priceNum <= 0) {
-      Alert.alert('Error', 'Quantity and price per coin must be greater than 0.');
+    const coin = cryptocurrencies.find(
+      (cryptocurrency) => cryptocurrency.value === selectedCoin,
+    );
+
+    if (
+      !coin ||
+      !quantityNum ||
+      quantityNum <= 0 ||
+      !priceNum ||
+      priceNum <= 0
+    ) {
+      Alert.alert(
+        'Error',
+        'Quantity and price per coin must be greater than 0.',
+      );
       return;
     }
 
@@ -34,21 +59,20 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
 
     const newTransaction: Transaction = {
       id: Date.now().toString(),
-      coin: cryptocurrencies.find((cryptocurrency) => cryptocurrency.label === initialCoin).label,
-      type: 'buy',
+      coin: coin.label,
+      type: selectedType as 'buy' | 'sell',
       quantity: parseFloat(quantity),
       pricePerCoin: parseFloat(pricePerCoin),
       date: formattedDate,
     };
-  
-    const response = await addTransaction(newTransaction); 
 
-    if (response.statusCode=== 200) {
+    const response = await addTransaction(newTransaction);
+
+    if (response.statusCode === 200) {
       return navigation.goBack();
     }
 
     Alert.alert('Error', 'Transaction failed to add.');
-
   };
 
   const inputAccessoryViewID = 'accessoryViewId';
@@ -60,7 +84,11 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
         onValueChange={(itemValue, itemIndex) => setSelectedCoin(itemValue)}
       >
         {cryptocurrencies.map((crypto) => (
-          <Picker.Item key={crypto.value} label={crypto.label} value={crypto.value} />
+          <Picker.Item
+            key={crypto.value}
+            label={crypto.label}
+            value={crypto.value}
+          />
         ))}
       </Picker>
       <PaperTextInput
@@ -77,6 +105,7 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
         keyboardType='numeric'
         inputAccessoryViewID={inputAccessoryViewID}
       />
+      <TypePicker onTypeChange={(type) => setType(type)} selectedType={selectedType} />
       <InputAccessoryView nativeID={inputAccessoryViewID}>
         <View style={styles.accessoryView}>
           <Button onPress={() => Keyboard.dismiss()} title='Done' />

@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import PortfolioOverviewScreen from '../screens/PortfolioOverviewScreen';
 import CoinPurchasesScreen from '../screens/CoinPurchasesScreen';
 import AddTransactionScreen from '../screens/AddTransactionScreen';
+import ChartScreen from '../screens/ChartScreen';
 
 // Define the Modal Stack first
 const ModalStack = createNativeStackNavigator();
@@ -40,6 +41,7 @@ const AppNavigator = () => {
           component={PortfolioOverviewScreen}
         />
         <Stack.Screen name='CoinPurchases' component={CoinPurchasesScreen} />
+        <Stack.Screen name='Chart' component={ChartScreen} />
         <Stack.Screen
           name='Modal'
           component={ModalStackScreen}

@@ -21,3 +21,16 @@ interface TransactionResponse {
   transaction?: Transaction | undefined;
   updatedTransactions?: Transaction[] | undefined;
 }
+
+interface ChartData {
+  labels: string[];
+  datasets: {
+    data: number[];
+  }[];
+}
+
+interface PortfolioItem {
+  coin: string;
+  quantity: number;
+  totalPrice: number;
+}

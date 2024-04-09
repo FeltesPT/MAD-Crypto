@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import { PieChart } from 'react-native-chart-kit';
 
-import { portfolioData } from '../../utils/transactionData';
 import { getRandomColor } from '../../utils/utils';
 
 const PortfolioChart: React.FC<{ portfolioArray: any[] }> = ({ portfolioArray }) => {

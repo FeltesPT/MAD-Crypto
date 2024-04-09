@@ -1,41 +1,38 @@
 import React, { useMemo } from 'react';
 import { Text, FlatList, StyleSheet } from 'react-native';
 import { Card, TouchableRipple } from 'react-native-paper';
-import PortfolioChart from './PortfolioChart';
-import PortfolioValueChart from './PortfolioValueChart';
 
 import { useTransactions } from '../../context/TransactionsContext';
+import ChartsContainerView from './ChartsContainerView';
 
 // Define the structure of your data items
-interface PortfolioItem {
-  coin: string;
-  quantity: number;
-  totalPrice: number;
-}
-
-const ListOfCoins: React.FC<{ onCoinPress: (coin: string) => void }> = ({
-  onCoinPress,
-}) => {
+const ListOfCoins: React.FC<{
+  onGoToChartPress: () => void;
+  onCoinPress: (coin: string) => void;
+}> = ({ onGoToChartPress, onCoinPress }) => {
   const { transactions } = useTransactions();
 
   const portfolioArray = useMemo(() => {
-    const portfolio = transactions.reduce<Record<string, PortfolioItem>>((acc, { coin, type, quantity, pricePerCoin }) => {
-      // Initialize the coin in the accumulator if it's not already there
-      if (!acc[coin]) {
-        acc[coin] = { coin, quantity: 0, totalPrice: 0 };
-      }
+    const portfolio = transactions.reduce<Record<string, PortfolioItem>>(
+      (acc, { coin, type, quantity, pricePerCoin }) => {
+        // Initialize the coin in the accumulator if it's not already there
+        if (!acc[coin]) {
+          acc[coin] = { coin, quantity: 0, totalPrice: 0 };
+        }
 
-      // Aggregate quantities and total prices
-      if (type === 'buy') {
-        acc[coin].quantity += quantity;
-        acc[coin].totalPrice += quantity * pricePerCoin;
-      } else {
-        acc[coin].quantity -= quantity;
-        acc[coin].totalPrice -= quantity * pricePerCoin;
-      }
+        // Aggregate quantities and total prices
+        if (type === 'buy') {
+          acc[coin].quantity += quantity;
+          acc[coin].totalPrice += quantity * pricePerCoin;
+        } else {
+          acc[coin].quantity -= quantity;
+          acc[coin].totalPrice -= quantity * pricePerCoin;
+        }
 
-      return acc;
-    }, {});
+        return acc;
+      },
+      {},
+    );
 
     // Convert the aggregated data back into an array
     return Object.values(portfolio);
@@ -45,12 +42,17 @@ const ListOfCoins: React.FC<{ onCoinPress: (coin: string) => void }> = ({
     <FlatList
       data={portfolioArray}
       keyExtractor={(item) => item.coin}
-      ListHeaderComponent={<PortfolioValueChart />}
+      ListHeaderComponent={
+        <ChartsContainerView
+          portfolioArray={portfolioArray}
+          onGoToChartPress={onGoToChartPress}
+        />
+      }
       contentContainerStyle={{ padding: 16 }}
       renderItem={({ item }) => (
         <TouchableRipple
           onPress={() => onCoinPress(item.coin)}
-          rippleColor="rgba(0, 0, 0, .32)"
+          rippleColor='rgba(0, 0, 0, .32)'
         >
           <Card style={styles.card}>
             <Card.Title title={item.coin} />
