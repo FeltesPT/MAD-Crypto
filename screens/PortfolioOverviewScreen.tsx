@@ -1,21 +1,23 @@
-import React, { useEffect }  from 'react';
+import React, { useEffect, useContext }  from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ThemeContext } from '../context/ThemeContext';
 
 import ListOfCoins from '../components/Portfolio/ListOfCoins';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PortfolioOverviewScreen: React.FC<{ navigation: any }> = ({
   navigation,
 }) => {
+  const { colors } = useContext(ThemeContext);
 
   useEffect(() => {
     navigation.setOptions({
+      title: "Portfolio",
       headerRight: () => (
         <MaterialCommunityIcons
           name='plus'
           size={24}
-          style={{ marginRight: 10 }}
+          style={{ marginRight: 10, color: colors.text }}
           onPress={() => openAddTransactionModal()}
         />
       ),
@@ -37,7 +39,7 @@ const PortfolioOverviewScreen: React.FC<{ navigation: any }> = ({
   };
   
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView style={[styles.view, { backgroundColor: colors.background }]}>
       <ListOfCoins onGoToChartPress={() => navigation.navigate('Chart')} onCoinPress={(coin) => navigation.navigate('CoinPurchases', { coin })} />
     </SafeAreaView>
   );

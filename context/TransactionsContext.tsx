@@ -77,16 +77,16 @@ export const TransactionsProvider: React.FC<TransactionsProviderProps> = ({
     [],
   );
 
-  return React.createElement(
-    TransactionsContext.Provider,
-    {
-      value: {
+  return (
+    <TransactionsContext.Provider
+      value={{
         transactions,
         addTransaction: addTransactionHandler,
         editTransaction: editTransactionHandler,
-      },
-    },
-    children,
+      }}
+    >
+      {children}
+    </TransactionsContext.Provider>
   );
 };
 

@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Text, FlatList, StyleSheet } from 'react-native';
 import { Card, TouchableRipple } from 'react-native-paper';
 
+import { ThemeContext } from '../../context/ThemeContext';
 import { useTransactions } from '../../context/TransactionsContext';
 import ChartsContainerView from './ChartsContainerView';
 
@@ -10,6 +11,7 @@ const ListOfCoins: React.FC<{
   onGoToChartPress: () => void;
   onCoinPress: (coin: string) => void;
 }> = ({ onGoToChartPress, onCoinPress }) => {
+  const { colors } = useContext(ThemeContext);
   const { transactions } = useTransactions();
 
   const portfolioArray = useMemo(() => {
@@ -54,11 +56,35 @@ const ListOfCoins: React.FC<{
           onPress={() => onCoinPress(item.coin)}
           rippleColor='rgba(0, 0, 0, .32)'
         >
-          <Card style={styles.card}>
-            <Card.Title title={item.coin} />
+          <Card
+            style={[
+              styles.card,
+              {
+                backgroundColor:
+                item.totalPrice > 0
+                    ? colors.positiveCardBackground
+                    : colors.negativeCardBackground,
+              },
+            ]}
+          >
+            <Card.Title
+              title={item.coin}
+              titleStyle={{
+                color: item.totalPrice > 0
+                ? colors.positiveCardText : colors.negativeCardText,
+                fontWeight: 'bold',
+                fontSize: 18,
+              }}
+            />
             <Card.Content>
-              <Text>Quantity: {item.quantity.toFixed(2)}</Text>
-              <Text>Total Value: ${item.totalPrice.toFixed(2)}</Text>
+              <Text style={{ color: item.totalPrice > 0
+                ? colors.positiveCardText : colors.negativeCardText }}>
+                Quantity: {item.quantity.toFixed(2)}
+              </Text>
+              <Text style={{ color: item.totalPrice > 0
+                ? colors.positiveCardText : colors.negativeCardText }}>
+                Total Value: ${item.totalPrice.toFixed(2)}
+              </Text>
             </Card.Content>
           </Card>
         </TouchableRipple>

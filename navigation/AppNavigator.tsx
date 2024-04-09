@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 // Import your screens
@@ -6,6 +6,8 @@ import PortfolioOverviewScreen from '../screens/PortfolioOverviewScreen';
 import CoinPurchasesScreen from '../screens/CoinPurchasesScreen';
 import AddTransactionScreen from '../screens/AddTransactionScreen';
 import ChartScreen from '../screens/ChartScreen';
+
+import { ThemeContext } from '../context/ThemeContext';
 
 // Define the Modal Stack first
 const ModalStack = createNativeStackNavigator();
@@ -29,15 +31,17 @@ const ModalStackScreen = () => (
 // Now define the main Stack Navigator
 const Stack = createNativeStackNavigator();
 const AppNavigator = () => {
+  const { colors } = useContext(ThemeContext);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName='PortfolioOverview'
         screenOptions={{
           headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: colors.header,
           },
-          headerTintColor: '#fff',
+          headerTintColor: colors.text,
           headerBackTitleVisible: false,
         }}
       >
@@ -50,7 +54,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name='Modal'
           component={ModalStackScreen}
-          options={{ headerShown: false,  title: 'Add Transaction', presentation: 'formSheet' }}
+          options={{
+            headerShown: false,
+            title: 'Add Transaction',
+            presentation: 'formSheet',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
