@@ -17,18 +17,19 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
   navigation,
   route,
 }) => {
-  const initialCoin = route.params?.coin;
+  const initialTransaction = route.params?.transaction;
+  const initialCoin = route.params?.coin || route.params?.transaction.coin || '';
   const initialCoinValue =
     cryptocurrencies.find(
       (cryptocurrency) => cryptocurrency.label === initialCoin,
     )?.value || cryptocurrencies[0].value;
 
   const [selectedCoin, setSelectedCoin] = useState(initialCoinValue);
-  const [quantity, setQuantity] = useState('');
-  const [pricePerCoin, setPricePerCoin] = useState('');
-  const [selectedType, setType] = useState('buy');
+  const [quantity, setQuantity] = useState(initialTransaction?.quantity.toString() || '');
+  const [pricePerCoin, setPricePerCoin] = useState(initialTransaction?.pricePerCoin.toString() || '');
+  const [selectedType, setType] = useState(initialTransaction?.type || 'buy');
 
-  const { addTransaction } = useTransactions();
+  const { addTransaction, editTransaction } = useTransactions();
 
   const handleAddTransaction = async () => {
     const quantityNum = parseFloat(quantity);
@@ -58,15 +59,20 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
     const formattedDate = currentDate.toISOString().split('T')[0];
 
     const newTransaction: Transaction = {
-      id: Date.now().toString(),
+      id: initialTransaction.id || Date.now().toString(),
       coin: coin.label,
       type: selectedType as 'buy' | 'sell',
-      quantity: parseFloat(quantity),
-      pricePerCoin: parseFloat(pricePerCoin),
-      date: formattedDate,
+      quantity: quantityNum,
+      pricePerCoin: priceNum,
+      date: initialTransaction.date || formattedDate,
     };
 
-    const response = await addTransaction(newTransaction);
+    let response: TransactionResponse;
+    if (initialTransaction) {
+      response = await editTransaction(newTransaction);
+    } else {
+      response = await addTransaction(newTransaction);
+    }
 
     if (response.statusCode === 200) {
       return navigation.goBack();

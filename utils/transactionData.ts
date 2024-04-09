@@ -61,6 +61,38 @@ export const addTransaction = async (
   }
 };
 
+export const editTransaction = async (
+  updatedTransaction: Transaction
+): Promise<TransactionResponse> => {
+
+  const transactions = await loadTransactions();
+
+  const updatedTransactions = transactions.map(t => {
+    if(t.id === updatedTransaction.id) {
+      return updatedTransaction; 
+    }
+    return t;
+  });
+
+  try {
+    await AsyncStorage.setItem(TRANSACTION_STORAGE_KEY, JSON.stringify(updatedTransactions));
+    return {
+      statusCode: 200,
+      transaction: updatedTransaction,
+      updatedTransactions,
+      message: 'Transaction updated successfully'
+    };
+
+  } catch (e) {
+    console.error('Failed to update transaction', e);
+    return {
+      statusCode: 500,
+      message: 'Failed to update transaction'
+    }
+  }
+
+}
+
 const calculatePortfolio = (
   transactions: Transaction[],
 ): Record<string, CoinSummary> => {

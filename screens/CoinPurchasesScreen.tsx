@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, FlatList, StyleSheet } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { useTransactions } from '../context/TransactionsContext';
+import TransactionCard from '../components/Transaction/TransactionCard';
 
 type ParamList = {
   CoinPurchases: {
@@ -16,7 +17,9 @@ const CoinPurchasesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
   const { coin } = route.params;
   const { transactions } = useTransactions();
 
-  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<
+    Transaction[]
+  >([]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -40,9 +43,18 @@ const CoinPurchasesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
     });
   };
 
+  const openEditTransactionModal = (transaction: Transaction) => {
+    navigation.navigate('Modal', {
+      screen: 'EditTransaction',
+      params: { transaction },
+    });
+  };
+
   useEffect(() => {
-    const coinTransactions = transactions.filter(t => t.coin === coin);
-    setFilteredTransactions(coinTransactions.slice().sort((a, b) => Number(b.id) - Number(a.id)));
+    const coinTransactions = transactions.filter((t) => t.coin === coin);
+    setFilteredTransactions(
+      coinTransactions.slice().sort((a, b) => Number(b.id) - Number(a.id)),
+    );
   }, [coin, transactions]);
 
   return (
@@ -50,13 +62,15 @@ const CoinPurchasesScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       <FlatList
         data={filteredTransactions}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.transactionItem}>
-            <Text>Date: {item.date}</Text>
-            <Text>Type: {item.type}</Text>
-            <Text>Quantity: {item.quantity}</Text>
-            <Text>Price Per Coin: ${item.pricePerCoin}</Text>
+        ListHeaderComponent={
+          <View style={styles.headerView}>
+            <Text style={styles.header}>Transactions List</Text>
           </View>
+        }
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => openEditTransactionModal(item)}>
+            <TransactionCard item={item} />
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -67,17 +81,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerView: {
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
   header: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  transactionItem: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
   },
 });
 

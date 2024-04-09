@@ -11,7 +11,7 @@ const TypePicker = ({selectedType, onTypeChange}) => {
         {transactionTypes.map((type) => (
           <Picker.Item
             key={type}
-            label={type}
+            label={type.charAt(0).toUpperCase() + type.slice(1)}
             value={type}
           />
         ))}

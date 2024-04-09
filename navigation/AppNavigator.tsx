@@ -11,12 +11,17 @@ import ChartScreen from '../screens/ChartScreen';
 const ModalStack = createNativeStackNavigator();
 const ModalStackScreen = () => (
   <ModalStack.Navigator
-    screenOptions={{ headerShown: false, presentation: 'formSheet' }}
+    screenOptions={{ headerShown: true, presentation: 'formSheet' }}
   >
     <ModalStack.Screen
       name='AddTransaction'
       component={AddTransactionScreen}
       options={{ title: 'Add Transaction' }}
+    />
+    <ModalStack.Screen
+      name='EditTransaction'
+      component={AddTransactionScreen}
+      options={{ title: 'Edit Transaction' }}
     />
   </ModalStack.Navigator>
 );
@@ -45,7 +50,7 @@ const AppNavigator = () => {
         <Stack.Screen
           name='Modal'
           component={ModalStackScreen}
-          options={{ title: 'Add Transaction', presentation: 'formSheet' }}
+          options={{ headerShown: false,  title: 'Add Transaction', presentation: 'formSheet' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -7,11 +7,16 @@ import React, {
   useEffect,
 } from 'react';
 
-import { loadTransactions, addTransaction } from '../utils/transactionData';
+import {
+  loadTransactions,
+  addTransaction,
+  editTransaction,
+} from '../utils/transactionData';
 
 interface TransactionsContextType {
   transactions: Transaction[];
   addTransaction: (newTransaction: Transaction) => Promise<TransactionResponse>;
+  editTransaction: (transaction: Transaction) => Promise<TransactionResponse>;
 }
 
 const TransactionsContext = createContext<TransactionsContextType | undefined>(
@@ -35,29 +40,52 @@ export const TransactionsProvider: React.FC<TransactionsProviderProps> = ({
     loadData();
   }, []);
 
-  const addTransactionHandler = useCallback(async (newTransaction: Transaction): Promise<TransactionResponse> => {
-    try {
-      // Save the new transaction and update AsyncStorage
-      const response = await addTransaction(newTransaction);
+  const addTransactionHandler = useCallback(
+    async (newTransaction: Transaction): Promise<TransactionResponse> => {
+      try {
+        const response = await addTransaction(newTransaction);
+        setTransactions((prevTransactions) => [
+          ...prevTransactions,
+          newTransaction,
+        ]);
+        return response;
+      } catch (error) {
+        console.error('Error adding transaction:', error);
+        return {
+          statusCode: 400,
+          message: 'Failed to add transaction',
+        };
+      }
+    },
+    [],
+  );
 
-      // Assuming addTransaction updates AsyncStorage correctly, 
-      // you can directly append the new transaction to the current state.
-      // This avoids the need to reload all transactions from AsyncStorage.
-      setTransactions(prevTransactions => [...prevTransactions, newTransaction]);
-
-      return response;
-    } catch (error) {
-      console.error('Error adding transaction:', error);
-      return {
-        statusCode: 400,
-        message: 'Failed to add transaction',
-      };
-    }
-  }, []);
+  const editTransactionHandler = useCallback(
+    async (transaction: Transaction): Promise<TransactionResponse> => {
+      try {
+        const response = await editTransaction(transaction);
+        setTransactions(response.updatedTransactions);
+        return response;
+      } catch (error) {
+        console.error('Error adding transaction:', error);
+        return {
+          statusCode: 400,
+          message: 'Failed to add transaction',
+        };
+      }
+    },
+    [],
+  );
 
   return React.createElement(
     TransactionsContext.Provider,
-    { value: { transactions, addTransaction: addTransactionHandler } },
+    {
+      value: {
+        transactions,
+        addTransaction: addTransactionHandler,
+        editTransaction: editTransactionHandler,
+      },
+    },
     children,
   );
 };
