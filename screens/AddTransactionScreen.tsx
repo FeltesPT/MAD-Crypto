@@ -7,6 +7,7 @@ import {
   Text,
   Alert,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { Menu, PaperProvider, TextInput, Button } from 'react-native-paper';
 import { cryptocurrencies } from '../utils/utils';
@@ -135,11 +136,11 @@ const AddTransactionScreen: React.FC<{ navigation: any; route: any }> = ({
           inputAccessoryViewID={inputAccessoryViewID}
         />
 
-        <InputAccessoryView nativeID={inputAccessoryViewID}>
+        {Platform.OS === 'ios' && <InputAccessoryView nativeID={inputAccessoryViewID}>
           <View style={styles.accessoryView}>
             <Button onPress={() => Keyboard.dismiss()}>Done</Button>
           </View>
-        </InputAccessoryView>
+        </InputAccessoryView>}
         <View style={styles.pickerContainer}>
           <PaperProvider>
             <TouchableOpacity
