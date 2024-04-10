@@ -1,6 +1,6 @@
 export const colors = {
-  primary: '#312C51',
-  secondary: '#48426D',
+  primary: '#48426D',
+  secondary: '#312C51',
   sell: '#F1AA9B',
   buy: '#F0C38E',
   text: '#fff',
@@ -8,15 +8,16 @@ export const colors = {
 
 export const theme = {
   colors: {
-    background: colors.secondary,
-    header: colors.secondary,
+    background: colors.primary,
+    header: colors.primary,
+    secondaryHeader: colors.secondary,
     text: colors.text,
-    cardBackground: colors.secondary,
+    cardBackground: colors.primary,
     buttonText: colors.text,
-    buttonBackground: colors.primary,
-    positiveCardBackground: colors.primary,
+    buttonBackground: colors.secondary,
+    positiveCardBackground: colors.secondary,
     negativeCardBackground: colors.sell,
     positiveCardText: colors.text,
-    negativeCardText: colors.primary,
+    negativeCardText: colors.secondary,
   }
 }

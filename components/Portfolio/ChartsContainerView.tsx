@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { View, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Button } from'react-native-paper';
 import PortfolioChart from './PortfolioChart';
 
 import { ThemeContext } from '../../context/ThemeContext';
@@ -15,7 +16,7 @@ const ChartsContainerView: React.FC<{
     <View>
       <PortfolioChart portfolioArray={portfolioArray} />
       <View style={styles.button}>
-        <Button color={colors.text} onPress={onGoToChartPress} title='View Line Chart' />
+        <Button textColor={colors.text} buttonColor={colors.buttonBackground} onPress={onGoToChartPress}>View Line Chart</Button>
       </View>
     </View>
   );

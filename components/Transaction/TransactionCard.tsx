@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Text, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
+import { Card, Chip } from 'react-native-paper';
 import { ThemeContext } from '../../context/ThemeContext';
 
 const TransactionCard = ({ item }: { item: Transaction }) => {
@@ -25,8 +25,9 @@ const TransactionCard = ({ item }: { item: Transaction }) => {
         titleStyle={{ color: textColor, fontWeight: 'bold', fontSize: 18 }}
       />
       <Card.Content>
-        <Text style={{ color: textColor }}>Quantity: {item.quantity.toFixed(2)}</Text>
-        <Text style={{ color: textColor }}>Value: ${item.pricePerCoin.toFixed(2)}</Text>
+        <Text style={{ color: textColor }}><Text style={{fontWeight: 'bold'}}>Quantity:</Text> {item.quantity.toFixed(2)}</Text>
+        <Text style={{ color: textColor }}><Text style={{fontWeight: 'bold'}}>Value:</Text> ${item.pricePerCoin.toFixed(2)}</Text>
+        <Text style={{ color: textColor }}><Text style={{fontWeight: 'bold'}}>Date:</Text> {item.date}</Text>
       </Card.Content>
     </Card>
   );

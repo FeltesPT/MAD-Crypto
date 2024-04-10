@@ -1,21 +1,25 @@
-import React, { useMemo, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useMemo, useState, useContext } from 'react';
+import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { SegmentedButtons } from 'react-native-paper';
 import { Picker } from '@react-native-picker/picker';
 import { subDays, subMonths, subYears, isWithinInterval } from 'date-fns';
 
 import PortfolioValueChart from '../components/Portfolio/PortfolioValueChart';
 import { useTransactions } from '../context/TransactionsContext';
 
+import { ThemeContext } from '../context/ThemeContext';
+
 const ChartScreen = () => {
   const { transactions } = useTransactions();
+  const { colors } = useContext(ThemeContext);
 
   const dateFilters = [
-    { label: 'One Week', value: 'week' },
-    { label: 'One Month', value: 'month' },
-    { label: 'Three Months', value: '3months' },
-    { label: 'Six Months', value: '6months' },
-    { label: 'Nine Months', value: '9months' },
-    { label: 'One year', value: '1year' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '3M', value: '3months' },
+    { label: '6M', value: '6months' },
+    { label: '9M', value: '9months' },
+    { label: '1Y', value: '1year' },
   ];
 
   const [selectedFilter, setSelectedFilter] = useState('6months');
@@ -129,27 +133,24 @@ const ChartScreen = () => {
   const filteredData = useMemo(() => {
     return filterData(chartData, selectedFilter);
   }, [chartData, selectedFilter]);
-  
+
   return (
-    <View style={styles.view}>
-      <Picker
-        selectedValue={selectedFilter}
-        onValueChange={(itemValue) => setSelectedFilter(itemValue)}
-      >
-        {dateFilters.map((filter) => (
-          <Picker.Item
-            key={filter.value}
-            label={filter.label}
-            value={filter.value}
+    <View style={[styles.view, { backgroundColor: colors.background }]}>
+      <View style={styles.filterView}>
+        <Text style={{paddingHorizontal: 8, paddingVertical: 4, color: colors.text}}>Filter by date:</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <SegmentedButtons
+            value={selectedFilter}
+            onValueChange={(itemValue) => setSelectedFilter(itemValue)}
+            buttons={dateFilters}
+            style={{backgroundColor: colors.text, borderRadius: 20}}
           />
-        ))}
-      </Picker>
-      <View style={styles.chartContainer}> 
-      {filteredData.datasets[0].data &&
-      filteredData.datasets[0].data.length > 0 ? (
-        <PortfolioValueChart chartData={filteredData} />
-      ) : null}
+        </ScrollView>
       </View>
+        {filteredData.datasets[0].data &&
+        filteredData.datasets[0].data.length > 0 ? (
+          <PortfolioValueChart chartData={filteredData} />
+        ) : null}
     </View>
   );
 };
@@ -159,11 +160,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 8,
   },
-  chartContainer: {
-    height: 230,
-    backgroundColor: 'black',
-    borderRadius: 16,
-    overflow: 'hidden',
+  filterView: {
+    marginTop: 10,
+    marginBottom: 20,
   }
 });
 

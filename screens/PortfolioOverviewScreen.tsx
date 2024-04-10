@@ -1,5 +1,5 @@
 import React, { useEffect, useContext }  from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ThemeContext } from '../context/ThemeContext';
 
@@ -39,9 +39,9 @@ const PortfolioOverviewScreen: React.FC<{ navigation: any }> = ({
   };
   
   return (
-    <SafeAreaView style={[styles.view, { backgroundColor: colors.background }]}>
+    <View style={[styles.view, { backgroundColor: colors.background }]}>
       <ListOfCoins onGoToChartPress={() => navigation.navigate('Chart')} onCoinPress={(coin) => navigation.navigate('CoinPurchases', { coin })} />
-    </SafeAreaView>
+    </View>
   );
 };
 

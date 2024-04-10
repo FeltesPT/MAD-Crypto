@@ -61,7 +61,7 @@ const ListOfCoins: React.FC<{
               styles.card,
               {
                 backgroundColor:
-                item.totalPrice > 0
+                  item.totalPrice > 0
                     ? colors.positiveCardBackground
                     : colors.negativeCardBackground,
               },
@@ -70,20 +70,36 @@ const ListOfCoins: React.FC<{
             <Card.Title
               title={item.coin}
               titleStyle={{
-                color: item.totalPrice > 0
-                ? colors.positiveCardText : colors.negativeCardText,
+                color:
+                  item.totalPrice > 0
+                    ? colors.positiveCardText
+                    : colors.negativeCardText,
                 fontWeight: 'bold',
                 fontSize: 18,
               }}
             />
             <Card.Content>
-              <Text style={{ color: item.totalPrice > 0
-                ? colors.positiveCardText : colors.negativeCardText }}>
-                Quantity: {item.quantity.toFixed(2)}
+              <Text
+                style={{
+                  color:
+                    item.totalPrice > 0
+                      ? colors.positiveCardText
+                      : colors.negativeCardText,
+                }}
+              >
+                <Text style={{ fontWeight: 'bold' }}>Quantity:</Text>{' '}
+                {item.quantity.toFixed(2)}
               </Text>
-              <Text style={{ color: item.totalPrice > 0
-                ? colors.positiveCardText : colors.negativeCardText }}>
-                Total Value: ${item.totalPrice.toFixed(2)}
+              <Text
+                style={{
+                  color:
+                    item.totalPrice > 0
+                      ? colors.positiveCardText
+                      : colors.negativeCardText,
+                }}
+              >
+                <Text style={{ fontWeight: 'bold' }}>Total Value:</Text> $
+                {item.totalPrice.toFixed(2)}
               </Text>
             </Card.Content>
           </Card>

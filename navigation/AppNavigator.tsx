@@ -13,7 +13,7 @@ import { ThemeContext } from '../context/ThemeContext';
 const ModalStack = createNativeStackNavigator();
 const ModalStackScreen = () => (
   <ModalStack.Navigator
-    screenOptions={{ headerShown: true, presentation: 'formSheet' }}
+    screenOptions={{ headerShown: true }}
   >
     <ModalStack.Screen
       name='AddTransaction'
